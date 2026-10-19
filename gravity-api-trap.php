@@ -5,7 +5,7 @@
  * Author: SageAge
  * Author URI: https://github.com/sageage/gravity-api-trap
  * Description: Collect Gravity forms to Webhook
- * Version: 0.1.4.5
+ * Version: 0.1.4.6
  * License: GPL2
  * License URL: http://www.gnu.org/licenses/gpl-2.0.txt
  * text-domain: gravity-api-trap
@@ -91,6 +91,13 @@ function gravity_api_trap_settings() {
                     <th scope="row">Endpoint URL:</th>
                     <td><input type="text" name="gravity_api_trap_endpoint_url" value="<?php echo esc_attr( get_option( 'gravity_api_trap_endpoint_url' ) ); ?>" /></td>
                 </tr>
+                <tr>
+                    <th scope="row">Default Community:</th>
+                    <td>
+                        <input type="text" name="gravity_api_trap_default_community" value="<?php echo esc_attr( get_option( 'gravity_api_trap_default_community' ) ); ?>" />
+                        <p class="description">Aline community NameUnique (e.g. ABC001) used when a form has no CommunityUnique field mapped. If empty, those submissions are not sent to Aline.</p>
+                    </td>
+                </tr>
             </table>
             <?php submit_button(); ?>
         </form>
@@ -105,4 +112,5 @@ function gravity_api_trap_register_settings() {
     register_setting( 'gravity-api-trap', 'gravity_api_trap_portal_id' );
     register_setting( 'gravity-api-trap', 'gravity_api_trap_primary_api_key' );
     register_setting( 'gravity-api-trap', 'gravity_api_trap_endpoint_url' );
+    register_setting( 'gravity-api-trap', 'gravity_api_trap_default_community', array( 'sanitize_callback' => 'sanitize_text_field' ) );
 }

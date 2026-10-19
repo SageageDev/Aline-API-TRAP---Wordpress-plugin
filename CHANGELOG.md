@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.1.4.6] - 2026-10-19
+
+### Changed
+- Removed the hard-coded fallback community `CSL003LAND`. Added a per-site **Default Community** setting (Settings > Gravity API Trap) used when a form has no CommunityUnique field mapped. If neither is set, the submission is logged to `debug.log` and not sent to Aline (the Gravity Forms entry is still saved).
+- **Upgrade note:** sites that relied on the old fallback must set Default Community to `CSL003LAND` (or the correct community) after updating.
+
 ## [0.1.4.5] - 2026-07-29
 
 ### Fixed

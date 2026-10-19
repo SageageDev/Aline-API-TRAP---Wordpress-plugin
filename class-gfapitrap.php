@@ -139,8 +139,13 @@ class GFAPITrap extends GFFeedAddOn {
 
         // Apply defaults for required fields if mapping is missing or empty.
         $communityunique = isset($metaData['communityunique']) ? $this->get_field_value($form, $entry, $metaData['communityunique']) : null;
+        // Fall back to this site's default community (Settings > Gravity API Trap).
         if (!$communityunique) {
-            $communityunique = 'CSL003LAND';
+            $communityunique = trim( (string) get_option('gravity_api_trap_default_community') );
+        }
+        if (!$communityunique) {
+            error_log('API request skipped: no CommunityUnique mapped on the form and no Default Community set (entry ' . rgar($entry, 'id') . ')', 3, plugin_dir_path(__FILE__) . 'debug.log');
+            return;
         }
 
         $carelevel = $rawCareLevel;
