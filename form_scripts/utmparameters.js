@@ -9,7 +9,7 @@
   function looksPaid(m) {
     m = (m || '').toLowerCase();
     return (
-      ['cpc','ppc','sem','paid','paid_search','paidsearch','paid-social','paidsocial','paid social','display','banner','programmatic']
+      ['cpc','ppc','sem','paid','paid_search','paidsearch','paid-social','paidsocial','paid_social','paid social','display','banner','programmatic']
         .includes(m) ||
       m.includes('paid') || m.includes('cpc') || m.includes('ppc')
     );
@@ -46,25 +46,23 @@
     if (hasGoogleClick) {
       if (isDisplay) return 'WEB - Google Display';
       if (isLocalIntent) return 'WEB - Google Local';
-      return 'WEB - Google Paid';
+      return 'WEB - Paid Search';
     }
 
     if (hasMetaClick) {
       if (isOrganic) return 'WEB - Organic Social';
-      if (looksPaid(utm_medium)) return 'WEB - Facebook Paid';
-      return 'WEB - Facebook';
+      return 'WEB - Paid Social';
     }
 
     if (isEmail) return 'Email';
 
+    if (utm_medium === 'referral') return 'WEB - Referral Web Traffic';
+
     if (looksPaid(utm_medium) && (utm_medium.includes('cpc') || utm_medium.includes('ppc') || utm_medium.includes('sem') || utm_medium.includes('paid_search') || utm_medium.includes('paidsearch'))) {
-      if (isGoogle) return 'WEB - Google Paid';
-      if (isBing) return 'WEB - Bing Search';
       return 'WEB - Paid Search';
     }
 
     if (looksPaid(utm_medium) && (utm_medium.includes('social') || isFacebook || isInstagram)) {
-      if (isFacebook || isInstagram) return 'WEB - Facebook Paid';
       return 'WEB - Paid Social';
     }
 
@@ -80,7 +78,6 @@
 
       if (isLocalListing) return 'WEB - Organic Search';
       if (isGoogle) return 'WEB - Google Search';
-      if (isBing) return 'WEB - Bing Search';
       return 'WEB - Organic Search';
     }
 
@@ -88,8 +85,6 @@
       if (isGoogle) return 'WEB - Google Display';
       return 'WEB - 3rd Party Display';
     }
-
-    if (getParam('utm_source') || getParam('utm_medium') || getParam('utm_campaign')) return 'Internet';
 
     return 'WEB - Company Website';
   }

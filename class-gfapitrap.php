@@ -12,8 +12,8 @@ class GFAPITrap extends GFFeedAddOn {
     protected $_slug = 'gravity-api-trap';
     protected $_path = 'gravity-api-trap/gravity-api-trap.php';
     protected $_full_path = __FILE__;
-    protected $_title = 'Gravity Forms Enquire/Aline Integration';
-    protected $_short_title = 'Enquire/Aline API';
+    protected $_title = 'Gravity Forms Aline Integration';
+    protected $_short_title = 'Aline API';
  
     private static $_instance = null;
  
@@ -31,7 +31,7 @@ class GFAPITrap extends GFFeedAddOn {
     public function feed_settings_fields() {
         return array(
             array(
-                'title'  => esc_html__( 'Enquire/Aline Settings', 'gravity-api-trap' ),
+                'title'  => esc_html__( 'Aline Settings', 'gravity-api-trap' ),
                 'fields' => array(
                     array(
                         'name'                => 'feedName',
@@ -365,7 +365,7 @@ class GFAPITrap extends GFFeedAddOn {
                       $display === '1' || $display === 'true';
         $is_local   = strpos( $campaign, 'local' ) !== false || strpos( $medium, 'local' ) !== false;
 
-        $paid_mediums = [ 'cpc','ppc','sem','paid','paid_search','paidsearch','paid-social','paidsocial','paid social','display','banner','programmatic' ];
+        $paid_mediums = [ 'cpc','ppc','sem','paid','paid_search','paidsearch','paid-social','paidsocial','paid_social','paid social','display','banner','programmatic' ];
         $looks_paid   = in_array( $medium, $paid_mediums ) ||
                         strpos( $medium, 'paid' ) !== false ||
                         strpos( $medium, 'cpc' )  !== false ||
@@ -377,25 +377,23 @@ class GFAPITrap extends GFFeedAddOn {
         if ( $has_google_click ) {
             if ( $is_display ) return 'WEB - Google Display';
             if ( $is_local )   return 'WEB - Google Local';
-            return 'WEB - Google Paid';
+            return 'WEB - Paid Search';
         }
 
         if ( $has_meta_click ) {
             if ( $is_organic ) return 'WEB - Organic Social';
-            if ( $looks_paid ) return 'WEB - Facebook Paid';
-            return 'WEB - Facebook';
+            return 'WEB - Paid Social';
         }
 
         if ( $is_email ) return 'Email';
 
+        if ( $medium === 'referral' ) return 'WEB - Referral Web Traffic';
+
         if ( $looks_paid && ( strpos( $medium, 'cpc' ) !== false || strpos( $medium, 'ppc' ) !== false || strpos( $medium, 'sem' ) !== false || strpos( $medium, 'paid_search' ) !== false || strpos( $medium, 'paidsearch' ) !== false ) ) {
-            if ( $is_google ) return 'WEB - Google Paid';
-            if ( $is_bing )   return 'WEB - Bing Search';
             return 'WEB - Paid Search';
         }
 
         if ( $looks_paid && ( strpos( $medium, 'social' ) !== false || $is_facebook || $is_instagram ) ) {
-            if ( $is_facebook || $is_instagram ) return 'WEB - Facebook Paid';
             return 'WEB - Paid Social';
         }
 
@@ -406,7 +404,6 @@ class GFAPITrap extends GFFeedAddOn {
             $is_local_listing = $source === 'local_listing' || strpos( $source, 'local_listing' ) !== false || $utm_id === 'gbp';
             if ( $is_local_listing ) return 'WEB - Organic Search';
             if ( $is_google ) return 'WEB - Google Search';
-            if ( $is_bing )   return 'WEB - Bing Search';
             return 'WEB - Organic Search';
         }
 
@@ -466,9 +463,9 @@ class GFAPITrap extends GFFeedAddOn {
         }
     
         $existingIndividuals = json_decode(wp_remote_retrieve_body($getResponse), true);
-    
+
         $existingIndividual = null;
-        foreach ($existingIndividuals as $individual) {
+        foreach ((array) $existingIndividuals as $individual) {
             if ($individual['properties'][0]['value'] === $data['Email']) {
                 $existingIndividual = $individual;
                 break;
